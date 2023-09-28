@@ -1,7 +1,9 @@
+import math
 
+
+# IMPURITY = "me"
+IMPURITY = "gini"
 # IMPURITY = "entropy"
-IMPURITY = "me"
-# IMPURITY = "gini"
 
 # Get probability/proportion of label value
 def getp(df, label_value):
@@ -10,14 +12,6 @@ def getp(df, label_value):
         return 0
     numerator = sum(df["label"] == label_value)
     return (numerator / float(total))
-
-# def get_entropy_of_dataset(df, labels):
-#     sum = 0.0
-#     for label in labels:
-#         prob_i = getp(df, label)
-#         if prob_i != 0:
-#             sum += (prob_i * math.log(prob_i, len(labels)))
-#     return sum * -1
 
 def get_impurity_of_dataset(df, labels):
     if IMPURITY == "gini":
@@ -28,11 +22,18 @@ def get_impurity_of_dataset(df, labels):
         gini = (1 - sum)
         return gini
     if IMPURITY == "me":
-        label_counts = df["label"].value_counts()
-        majority_feature_count = label_counts.max()
-        size = len(df)
-        me = 1 - (majority_feature_count / size)
+        label_counts_array = df["label"].value_counts()
+        majority_feature_count = label_counts_array.max()
+        me = 1 - (majority_feature_count / len(df))
         return me
+    if IMPURITY == "entropy":
+        label_counts_array = df["label"].value_counts()
+        total_size = len(df)
+        entropy = 0
+        for count in label_counts_array:
+            p = count / total_size
+            entropy -= p * math.log2(p)
+        return entropy
 
 def get_impurity_of_feature_at_specific_value(df, attribute_name, value, labels):
     subset = df.loc[(df[attribute_name] == value)]

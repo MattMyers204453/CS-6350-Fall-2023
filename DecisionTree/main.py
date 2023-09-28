@@ -1,4 +1,3 @@
-#from sys import displayhook
 import sys
 import pandas as p
 from ID3 import ID3, ID3_traverse_tree
