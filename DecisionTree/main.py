@@ -1,6 +1,6 @@
 import sys
 import pandas as p
-from ID3 import ID3, ID3_traverse_tree
+from ID3 import ID3, predict
 import read_data as read
 
 # READ DATA INTO DATAFRAME
@@ -33,7 +33,7 @@ for i in range(len(test_df.index)):
     # get correct label
     actual_label = row.get("label")
     # get predicted label
-    result_label = ID3_traverse_tree(row, root, attribute_values)
+    result_label = predict(row, root, attribute_values)
     # increment error if they don't match
     if (actual_label != result_label):
         error_count += 1
