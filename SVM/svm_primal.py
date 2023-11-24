@@ -3,8 +3,8 @@ import numpy as np
 def sgn(v):
     return 1 if v > 0 else -1
 
-def predict(w, x_vector):
-    return sgn(np.dot(w, x_vector))
+def predict(w, x_i):
+    return sgn(np.dot(w, x_i))
 
 # Get feature vector (with folded bias) at i
 # drop label, add constant value of 1 (for bias), and convert to numpy array for matrix operations.
@@ -52,15 +52,13 @@ def train(df, attribute_names, T=100, r=0.001, C=(100.0 / 872.0), a=0.5, conv_th
 
     return w
 
-
 def test_and_print_results(df, w):
     errors = 0
     for i in range(len(df.index)):
-        row = df.iloc[i]
-        x_vector = x_at_i(i, df)
-        actual = row.get("genuine")
-        guess = predict(w, x_vector) 
-        if guess != actual:
+        feature_vector = x_at_i(i, df)
+        ground_truth_label = df.iloc[i].get("genuine")
+        prediction = predict(w, feature_vector) 
+        if prediction != ground_truth_label:
             errors += 1
     print(f"Total examples misclassified: {errors}")
     print(f"Accuracy: {(((float(len(df.index)) - errors) / float(len(df.index))) * 100)}%")
