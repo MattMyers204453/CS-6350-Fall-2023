@@ -47,7 +47,7 @@ def recover_b_and_get_support_vector_locations(X, Y_vector, alphas, C, gamma):
     for i in indices:
         sum_w_using_kernal = 0.0
         for j in range(len(X)):
-            sum_w_using_kernal += alphas[i] * Y_vector[i] * gaussian_kernel(X[j], X[i], gamma)
+            sum_w_using_kernal += alphas[j] * Y_vector[j] * gaussian_kernel(X[j], X[i], gamma)
         sum += (Y_vector[i] - sum_w_using_kernal)
     return (sum, indices)
 
