@@ -94,7 +94,12 @@ def ID3(df, attribute_names, attribute_values, label_values):
             leaf = Node(isLeafNode=True, feature=None, label=df["label"].unique()[0])
             root.children[i] = leaf
         # If the subset doesn't contain anything, create leaf node with the most common label of the original array
-        if (len(subset) == 0):
+        elif (len(subset) == 0):
+            most_common_label_in_original_df = df["label"].mode()[0]
+            leaf = Node(isLeafNode=True, feature=None, label=most_common_label_in_original_df)
+            root.children[i] = leaf
+        # If this is the last feature remaining, create leaf node with the most common label of the original array
+        elif (len(attribute_names) == 1):
             most_common_label_in_original_df = df["label"].mode()[0]
             leaf = Node(isLeafNode=True, feature=None, label=most_common_label_in_original_df)
             root.children[i] = leaf

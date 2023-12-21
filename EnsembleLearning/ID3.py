@@ -1,4 +1,5 @@
 import math
+import random
 
 
 # IMPURITY = "me"
@@ -58,8 +59,17 @@ def get_IG(impurity_of_set, df, attribute_name, attribute_values, labels):
 def find_highest_IG(df, attribute_names, labels, attribute_values):
     impurity_of_set = get_impurity_of_dataset(df, labels)
     IG_for_each_value = {}
+
+    feature_subset_indices = []
+    if len(attribute_names) >= 6:
+        feature_subset_indices = random.sample(range(len(attribute_names)), 6)
+    else:
+        feature_subset_indices = [0, 1, 2, 3, 4, 5]
+
     # Get the information gain for each feature
     for i in range(len(attribute_names)):
+        if i not in feature_subset_indices:
+            continue
         IG = get_IG(impurity_of_set, df, attribute_names[i], attribute_values, labels)
         IG_for_each_value[attribute_names[i]] = IG
     best_feature = max(IG_for_each_value, key=IG_for_each_value.get)
@@ -94,7 +104,12 @@ def ID3(df, attribute_names, attribute_values, label_values):
             leaf = Node(isLeafNode=True, feature=None, label=df["label"].unique()[0])
             root.children[i] = leaf
         # If the subset doesn't contain anything, create leaf node with the most common label of the original array
-        if (len(subset) == 0):
+        elif (len(subset) == 0):
+            most_common_label_in_original_df = df["label"].mode()[0]
+            leaf = Node(isLeafNode=True, feature=None, label=most_common_label_in_original_df)
+            root.children[i] = leaf
+        # If this is the last feature remaining, create leaf node with the most common label of the original array
+        elif (len(attribute_names) == 1):
             most_common_label_in_original_df = df["label"].mode()[0]
             leaf = Node(isLeafNode=True, feature=None, label=most_common_label_in_original_df)
             root.children[i] = leaf
